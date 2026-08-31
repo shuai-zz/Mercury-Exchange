@@ -39,7 +39,7 @@ def main() -> int:
 
     api_key = os.environ["AI_API_KEY"]
     base_url = os.environ.get("AI_BASE_URL", "https://api.moonshot.cn/v1").rstrip("/")
-    model = os.environ.get("AI_MODEL", "kimi-k2-0711-preview")
+    model = os.environ.get("AI_MODEL", "kimi-k2.7-code")
 
     context = f"PR 标题：{os.environ.get('PR_TITLE', '')}\nPR 描述：{os.environ.get('PR_BODY', '') or '(无)'}\n\n"
     note = "\n\n（注意：diff 过大，已截断，请仅基于可见部分 review）" if truncated else ""
