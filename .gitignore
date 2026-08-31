@@ -2,6 +2,7 @@
 
 .*
 !.github/
+!.coderabbit.yml
 **/build/docker
 
 # Java.gitignore ##############################################################

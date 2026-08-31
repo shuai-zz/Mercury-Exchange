@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: zh-CN
+
+reviews:
+  # assertive：更主动地指出问题；chill 则更保守
+  profile: assertive
+  auto_review:
+    enabled: true
+    # 草稿 PR 不 review
+    drafts: false
+  path_instructions:
+    - path: "**/*.java"
+      instructions: |
+        这是一个事件溯源架构的内存撮合交易所。审查 Java 代码时重点关注：
+        1. 资产/金额计算的正确性：必须使用 BigDecimal，检查精度和舍入问题；
+        2. 账本不变量：任何资产操作后 available/frozen 不得为负；
+        3. 并发假设：trading-engine 内部由单线程顺序处理事件，若发现该模块引入锁或共享可变状态的并发访问，请重点质疑；
+        4. 边界条件：空值、零值、数量为负等；
+        5. 单元测试覆盖缺口。
+    - path: "**/*.yml"
+      instructions: |
+        检查配置项是否有明确的默认值，敏感信息（密钥、密码）不得硬编码提交。
+
+# 排除噪音路径，不参与 review
+path_filters:
+  - "!**/*.md"
+  - "!**/target/**"
+
+chat:
+  auto_reply: true
