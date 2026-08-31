@@ -19,67 +19,96 @@
 
 - Java 17（编译 target 17，JDK 21 可运行）+ Spring Boot 3.x + Spring Cloud 2022.x + Maven
 - Kafka（事件流）、Redis（缓存）、MySQL 8（持久化）、Vert.x（WebSocket 推送）
-- 基础设施通过 `step-by-step/step-1/build/docker-compose.yml` 一键启动
+- 基础设施通过 `build/docker-compose.yml` 一键启动
 
-## 开发计划（共约 8 周）
+## 仓库结构
 
-| 周次 | 内容 | 状态 |
-| ---- | ---- | ---- |
-| W1 | Step 1：项目骨架、基础设施、数据库表结构 | ✅ 已完成 |
-| W2 | Step 2：common 模块（核心模型、工具类）+ Step 3：trading-api | 待开始 |
-| W3 | Step 4：trading-sequencer 定序器 | 待开始 |
-| W4–W5 | Step 5–6：撮合引擎 + 清算结算（本项目的核心，预留两周） | 待开始 |
-| W6 | Step 7：quotation 行情服务 | 待开始 |
-| W7 | Step 8：push 推送 + Step 9：UI 界面 | 待开始 |
-| W8 | Step 10–11：崩溃恢复、7x24 运行整合 + 收尾（文档、压测） | 待开始 |
+本仓库是产品仓库，模块直接位于仓库根目录：
 
-每个 Step 的开发方式：先阅读教程对应章节，再自己实现，最后可参考上游
-`michaelliao/warpexchange` 的对应 commit 对照检查（不要直接抄）。
+```
+├── parent/             Maven 父 POM
+├── build/              docker-compose（Kafka/Redis/MySQL）+ 建库 SQL
+├── config/             Spring Cloud Config 配置中心
+├── config-repo/        外置配置文件
+├── common/             公共代码（模型、枚举、工具类）
+├── trading-api/        用户侧 REST API
+├── trading-sequencer/  全局定序器
+├── trading-engine/     撮合引擎（核心）
+├── quotation/          行情服务
+├── push/               WebSocket 推送
+└── ui/                 Web 界面
+```
+
+注意：无根聚合 POM，需按依赖顺序逐个 `mvn install`（`parent` → `common` → 其余模块）。
 
 ## 构建与运行
 
 ```bash
 # 启动基础设施（Kafka / Redis / MySQL / Zookeeper）
-cd step-by-step/step-1/build && docker compose up -d
+cd build && docker compose up -d
 
 # 安装 parent POM（只需一次，或 parent 变更后）
 cd ../parent && mvn install
 
-# 编译/安装各模块（common 必须先 install，其他模块依赖它）
+# 安装 common（其他模块依赖它，变更后必须重新 install）
 cd ../common && mvn install
-# 其余模块：config / trading-api / trading-sequencer / trading-engine / quotation / push / ui
 
-# 启动顺序：config → 各业务服务 → ui
+# 编译其余模块：config / trading-api / trading-sequencer / trading-engine / quotation / push / ui
+
+# 服务启动顺序：config → 各业务服务 → ui
 ```
 
-注意：step-N 各阶段无根聚合 POM，需按依赖顺序逐个 `mvn install`。
+## 开发计划（里程碑制）
 
-## 提交规范
+| 里程碑 | 内容 | 对应版本标签 |
+| ------ | ---- | ------------ |
+| v0.1   | 项目骨架、基础设施、数据库表结构 | `v0.1.0` ✅ |
+| v0.2   | common 模块 + 资产系统（Issue #4） | `v0.2.0` |
+| v0.3   | trading-api 用户接口 | `v0.3.0` |
+| v0.4   | 定序器 + 事件溯源机制 | `v0.4.0` |
+| v0.5   | 撮合引擎（核心，重点投入） | `v0.5.0` |
+| v0.6   | 清算结算 | `v0.6.0` |
+| v0.7   | 行情服务 + WebSocket 推送 | `v0.7.0` |
+| v0.8   | Web UI | `v0.8.0` |
+| v1.0   | 崩溃恢复、7x24 运行整合（MVP 完成） | `v1.0.0` |
+| v2.0   | 功能增强（手续费、市价单、开放API、多交易对、风控、压测，见 milestone "v2 功能增强"） | `v2.0.0` |
+
+## 协作规范
 
 **一切代码变更必须通过 Issue + PR 流程，禁止直接 push 到 main。**
 
-### 分支
+### Issue 管理
+
+- 每个开发任务先建 Issue，描述目标、范围（checklist）和验收标准
+- 必须打 label：`enhancement`（新功能）/ `bug` / `docs` / `chore`
+- 必须挂 milestone：主线任务挂 `v1.0 交易所主线（MVP）`，增强功能挂 `v2 功能增强`
+- 任务完成即关闭（优先通过 PR 的 `Closes #N` 自动关闭）
+
+### 分支管理
 
 - `main`：受保护分支，永远保持可构建状态，只接受 PR 合并
-- 功能分支命名：`step<N>-<简述>` 或 `fix/<简述>`、`feat/<简述>`，如 `step2-common`、`fix/kafka-image`
-- 历史学习分支：`step1`（保留，作为 step1 阶段快照）
+- 分支命名：`feat/<功能>`、`fix/<问题>`、`docs/<文档>`、`chore/<杂项>`，如 `feat/asset-service`
+- 从最新 `main` 切分支；合并后删除远程功能分支
+- 本地保留 `upstream-reference` 分支（原教程仓库完整代码，仅作对照参考，不推送）
 
-### 工作流
+### 提交与 PR
 
-1. **开 Issue**：每个开发任务先建 Issue，描述目标、范围和验收标准
-2. **建分支**：从最新 `main` 切出功能分支
-3. **开发 + 提交**：commit message 使用 Conventional Commits 格式：
-   - `feat: ...` 新功能 / `fix: ...` 修复 / `docs: ...` 文档 / `chore: ...` 杂项 / `refactor: ...` 重构
-   - message 用英文，一句话说明"做了什么"，必要时正文说明"为什么"
-4. **开 PR**：标题清晰，正文关联 Issue（`Closes #N`），说明变更内容和自测情况
-5. **合并前自查**：相关模块 `mvn install` 通过；不提交运行时产物（`target/`、`build/docker/` 数据目录等）
-6. **合并**：使用 merge commit，合并后删除远程功能分支
+- Commit message 使用 Conventional Commits 格式：`feat:` / `fix:` / `docs:` / `chore:` / `refactor:` / `test:`
+- message 用英文，一句话说明"做了什么"，必要时正文说明"为什么"
+- PR 标题清晰，正文关联 Issue（`Closes #N`），说明变更内容和自测情况
+- 合并前自查：相关模块 `mvn install` 通过；不提交运行时产物（`target/`、`build/docker/` 数据目录等）
+- 使用 merge commit 合并
+
+### 标签（Tag）与发布
+
+- 采用语义化版本 `vX.Y.Z`，里程碑完成时在 `main` 上打 tag 并 push
+- 每个里程碑的 tag 即该阶段的可回溯快照（替代原教程的 step 目录）
 
 ### 禁止事项
 
 - 禁止 force push 任何已推送的分支
 - 禁止提交密钥、本地环境配置（如个人代理配置）
-- 禁止把上游参考代码整段复制提交（学习项目，必须自己写）
+- 禁止整段复制上游参考代码提交（学习项目，必须自己写，可对照不可照抄）
 
 ## 环境备忘
 
