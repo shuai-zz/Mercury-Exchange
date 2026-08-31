@@ -5,7 +5,7 @@ Usage: ai_review.py <diff-file> <output-md>
 
 Env:
   AI_API_KEY   (required) API key
-  AI_BASE_URL  (required) OpenAI-compatible base url, e.g. https://api.moonshot.cn/v1
+  AI_BASE_URL  (required) OpenAI-compatible base url, e.g. https://api.deepseek.com/v1
   AI_MODEL     (required) model name
   PR_TITLE     optional PR title for context
   PR_BODY      optional PR description for context
@@ -38,8 +38,8 @@ def main() -> int:
         diff = diff[:MAX_DIFF_CHARS]
 
     api_key = os.environ["AI_API_KEY"]
-    base_url = os.environ.get("AI_BASE_URL", "https://api.moonshot.cn/v1").rstrip("/")
-    model = os.environ.get("AI_MODEL", "kimi-k2.7-code")
+    base_url = os.environ.get("AI_BASE_URL", "https://api.deepseek.com/v1").rstrip("/")
+    model = os.environ.get("AI_MODEL", "deepseek-v4-flash")
 
     context = f"PR 标题：{os.environ.get('PR_TITLE', '')}\nPR 描述：{os.environ.get('PR_BODY', '') or '(无)'}\n\n"
     note = "\n\n（注意：diff 过大，已截断，请仅基于可见部分 review）" if truncated else ""
