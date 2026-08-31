@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      # no root aggregator POM: install parent and common first,
+      # then build & test every service module in dependency order
+      - name: Install parent POM
+        run: mvn -B -q install -f parent/pom.xml
+
+      - name: Install common module
+        run: mvn -B -q install -f common/pom.xml
+
+      - name: Build and test service modules
+        run: |
+          set -e
+          for m in config trading-api trading-sequencer trading-engine quotation push ui; do
+            echo "=== $m ==="
+            mvn -B test -f $m/pom.xml
+          done
+
+      - name: Comment coverage report on PR
+        if: github.event_name == 'pull_request'
+        continue-on-error: true # no tests yet in early milestones; don't fail the build
+        uses: madrapps/jacoco-report@v1.6.1
+        with:
+          paths: ${{ github.workspace }}/**/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 40
+          min-coverage-changed-files: 40
+          title: Test Coverage

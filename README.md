@@ -1,5 +1,7 @@
 # Mercury Exchange
 
+[![CI](https://github.com/shuai-zz/Mercury-Exchange/actions/workflows/ci.yml/badge.svg)](https://github.com/shuai-zz/Mercury-Exchange/actions/workflows/ci.yml)
+
 A simple, super fast, 7x24 in-memory exchange built from scratch.
 
 Mercury — the Roman god of commerce and speed — is exactly what this project aims for:

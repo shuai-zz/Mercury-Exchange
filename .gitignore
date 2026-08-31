@@ -1,6 +1,7 @@
 # hidden files
 
 .*
+!.github/
 **/build/docker
 
 # Java.gitignore ##############################################################

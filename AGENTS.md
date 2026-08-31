@@ -105,6 +105,17 @@ cd ../common && mvn install
 - 采用语义化版本 `vX.Y.Z`，里程碑完成时在 `main` 上打 tag 并 push
 - 每个里程碑的 tag 即该阶段的可回溯快照（替代原教程的 step 目录）
 
+### CI 与自动化
+
+- `.github/workflows/ci.yml`：PR / push main 时自动构建全部模块并跑测试，JaCoCo 覆盖率以评论形式展示在 PR 上
+- `.github/workflows/ai-review.yml`：PR 打开/更新时自动调用 AI API 做代码 review 并评论（脚本：`.github/scripts/ai_review.py`）
+  - 需要在仓库 Settings → Secrets and variables → Actions 配置：
+    - Secret `AI_API_KEY`（必填）：OpenAI 兼容 API 的密钥
+    - Variable `AI_BASE_URL`（可选，默认 `https://api.moonshot.cn/v1`）
+    - Variable `AI_MODEL`（可选，默认 `kimi-k2-0711-preview`）
+- AI review 仅供参考，不能替代人工自查；合并前仍要求 `mvn install` 全绿
+- 自动部署与压测自动化暂缓：尚无独立部署服务器，且压测依赖 Issue #10 的指标端点
+
 ### 禁止事项
 
 - 禁止 force push 任何已推送的分支
