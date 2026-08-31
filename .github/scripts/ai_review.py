@@ -5,8 +5,8 @@ Usage: ai_review.py <diff-file> <output-md>
 
 Env:
   AI_API_KEY   (required) API key
-  AI_BASE_URL  (required) OpenAI-compatible base url, e.g. https://api.deepseek.com/v1
-  AI_MODEL     (required) model name
+  AI_BASE_URL  (optional) OpenAI-compatible base url, e.g. https://api.deepseek.com/v1
+  AI_MODEL     (optional) model name
   PR_TITLE     optional PR title for context
   PR_BODY      optional PR description for context
 """

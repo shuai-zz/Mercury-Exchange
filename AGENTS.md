@@ -110,7 +110,7 @@ cd ../common && mvn install
 - `.github/workflows/ci.yml`：PR / push main 时自动构建全部模块并跑测试，JaCoCo 覆盖率以评论形式展示在 PR 上
 - `.github/workflows/ai-review.yml`：PR 打开/更新时自动调用 AI API 做代码 review 并评论（脚本：`.github/scripts/ai_review.py`）
   - 需要在仓库 Settings → Secrets and variables → Actions 配置：
-    - Secret `AI_API_KEY`（必填）：OpenAI 兼容 API 的密钥
+    - Secret `AI_API_KEY`（必填）：OpenAI 兼容 API 的密钥（当前默认 provider 为 DeepSeek，需在 platform.deepseek.com 创建）
     - Variable `AI_BASE_URL`（可选，默认 `https://api.deepseek.com/v1`）
     - Variable `AI_MODEL`（可选，默认 `deepseek-v4-flash`）
 - AI review 仅供参考，不能替代人工自查；合并前仍要求 `mvn install` 全绿
