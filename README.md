@@ -59,18 +59,16 @@ Then start the services in order: `config` → `trading-api` / `trading-sequence
 
 ## Roadmap
 
-This project is developed step by step:
-
-- [x] Step 1: Project skeleton, infrastructure and database schema
-- [ ] Step 2: Common module and configuration
-- [ ] Step 3: Trading API
-- [ ] Step 4: Event sequencing
-- [ ] Step 5: Matching engine
-- [ ] Step 6: Clearing & settlement
-- [ ] Step 7: Quotation service
-- [ ] Step 8: Push service
-- [ ] Step 9: Web UI
-- [ ] Step 10+: Integration, recovery and 7x24 operation
+- [x] **v0.1** — Project skeleton, infrastructure and database schema
+- [ ] **v0.2** — Common module & asset service
+- [ ] **v0.3** — Trading API
+- [ ] **v0.4** — Event sequencing & event sourcing
+- [ ] **v0.5** — Matching engine
+- [ ] **v0.6** — Clearing & settlement
+- [ ] **v0.7** — Quotation service & WebSocket push
+- [ ] **v0.8** — Web UI
+- [ ] **v1.0** — Crash recovery, integration and 7x24 operation (MVP)
+- [ ] **v2.0** — Enhancements: trading fees, market orders, open API, multi-symbol, risk control, benchmark
 
 ## Credits
 
