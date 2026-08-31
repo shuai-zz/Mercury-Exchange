@@ -21,10 +21,10 @@ reviews:
       instructions: |
         检查配置项是否有明确的默认值，敏感信息（密钥、密码）不得硬编码提交。
 
-# 排除噪音路径，不参与 review
-path_filters:
-  - "!**/*.md"
-  - "!**/target/**"
+  # 排除噪音路径，不参与 review
+  path_filters:
+    - "!**/*.md"
+    - "!**/target/**"
 
 chat:
   auto_reply: true
