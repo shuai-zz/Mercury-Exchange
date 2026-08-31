@@ -43,7 +43,7 @@ jobs:
         env:
           AI_API_KEY: ${{ secrets.AI_API_KEY }}
           AI_BASE_URL: ${{ vars.AI_BASE_URL || 'https://api.moonshot.cn/v1' }}
-          AI_MODEL: ${{ vars.AI_MODEL || 'kimi-k2-0711-preview' }}
+          AI_MODEL: ${{ vars.AI_MODEL || 'kimi-k2.7-code' }}
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_BODY: ${{ github.event.pull_request.body }}
         run: python3 .github/scripts/ai_review.py /tmp/pr.diff ai-review.md

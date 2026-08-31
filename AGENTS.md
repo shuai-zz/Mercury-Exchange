@@ -112,7 +112,7 @@ cd ../common && mvn install
   - 需要在仓库 Settings → Secrets and variables → Actions 配置：
     - Secret `AI_API_KEY`（必填）：OpenAI 兼容 API 的密钥
     - Variable `AI_BASE_URL`（可选，默认 `https://api.moonshot.cn/v1`）
-    - Variable `AI_MODEL`（可选，默认 `kimi-k2-0711-preview`）
+    - Variable `AI_MODEL`（可选，默认 `kimi-k2.7-code`）
 - AI review 仅供参考，不能替代人工自查；合并前仍要求 `mvn install` 全绿
 - 自动部署与压测自动化暂缓：尚无独立部署服务器，且压测依赖 Issue #10 的指标端点
 
