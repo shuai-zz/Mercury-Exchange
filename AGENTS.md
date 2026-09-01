@@ -78,6 +78,8 @@ cd ../common && mvn install
 
 **一切代码变更必须通过 Issue + PR 流程，禁止直接 push 到 main。**
 
+**处理源码学习任务时必须遵循 [docs/LEARNING_WORKFLOW.md](docs/LEARNING_WORKFLOW.md)。**
+
 ### Issue 管理
 
 - 每个开发任务先建 Issue，描述目标、范围（checklist）和验收标准
