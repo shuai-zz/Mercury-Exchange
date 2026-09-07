@@ -67,243 +67,64 @@ A learning-oriented PR is valid if it provides concrete evidence for understandi
 
 ---
 
-# 3. Labels
+# 3. Labels and Milestones
 
-Use the following four main labels.
+标签按用途组合，不要求每个 Issue 都有全部类别。
 
-## `architecture`
+| 用途 | 标签 | 规则 |
+| --- | --- | --- |
+| 学习方向 | `architecture`、`code-reading`、`experiment` | 学习任务选一个主要方向，确有需要再加第二个 |
+| 改动类型 | `enhancement`、`bug`、`documentation`、`chore` | 开发任务选择一个主要类型；纯阅读无需硬加开发标签 |
+| 任务层级 | `main-issue`、`sub-issue` | 主任务与子任务二选一；独立任务可以不加 |
 
-System architecture, component interactions, data flow, and design trade-offs.
+- `documentation` 是文档标签；`docs:` 仍可用于分支或提交，不创建 `docs` 标签。
+- `improvement` 不再用于新任务：新功能用 `enhancement`，修复用 `bug`，文档用 `documentation`，维护、独立测试补充或不改变行为的重构用 `chore`。旧标签保留用于历史检索。
+- `epic` 仅用于跨模块的大型提案，不代替父子关系。
+- `sub-issue` 标签只是分类，必须同时通过 GitHub 建立真实的父子关系。
+- 主线学习和开发挂 `v1.0 交易所主线（MVP）`；增强功能挂 `v2 功能增强`；永续合约挂 `v3.0 永续合约引擎`。子任务默认继承父任务的里程碑。
+- 不为一次性的分类随意新建标签。
 
-Typical topics:
+# 4. Issue Structure and Task Boundaries
 
-- overall system architecture
-- order lifecycle
-- module boundaries
-- matching architecture
-- persistence strategy
-- event flow
-- concurrency model
-- failure recovery
-
-Example:
-
-> Why does WarpExchange keep the matching engine in memory?
-
----
-
-## `code-reading`
-
-Source-code walkthroughs focused on implementation details and execution paths.
-
-Typical topics:
-
-- tracing one API request
-- following a LIMIT order
-- reading OrderBook implementation
-- understanding partial fill
-- understanding cancellation
-- locating domain models
-- studying important abstractions
-
-Example:
-
-> Trace a LIMIT BUY order from API to OrderBook.
-
----
-
-## `experiment`
-
-Experiments, benchmarks, tracing, and tests used to validate system behavior.
-
-Typical topics:
-
-- throughput benchmark
-- latency measurement
-- concurrency testing
-- stress testing
-- failure simulation
-- tracing
-- profiling
-- deterministic behavior verification
-
-Example:
-
-> Benchmark matching performance with 100k orders.
-
----
-
-## `improvement`
-
-Refactors, feature enhancements, and architectural improvements to the existing system.
-
-Typical topics:
-
-- small refactoring
-- persistence prototype
-- WebSocket enhancement
-- improved tests
-- improved observability
-- alternative architecture prototype
-- documentation improvements
-
-Example:
-
-> Prototype a simple WAL for matching-engine recovery.
-
-Do not create new labels unless there is a clear recurring need.
-
----
-
-# 4. Issue Structure
-
-Each learning Issue should follow approximately this structure.
+默认使用下面的简版。创建时写清问题、范围、验证方式和关联；结果在实际完成后填写，不提前编写。
 
 ```markdown
-# Title
+## 目标
+想搞懂什么，或者要完成什么？为什么现在做？
 
-A question-oriented title is preferred.
+## 当前理解
+目前怎么理解？不确定的地方直接标出来。
 
-Example:
+## 范围与验证
+- [ ] 准备读什么、改什么或做什么实验？
+- [ ] 怎样判断完成？
 
-Why does the matching engine use in-memory state?
+## 结果
+完成后补充简短结论、证据链接和剩余问题。
 
-## Goal
-
-What do we want to understand or verify?
-
-## Context
-
-Why is this question important?
-
-Which part of the exchange system does it affect?
-
-## Current Understanding
-
-Describe the current mental model before deeper investigation.
-
-It is acceptable for this section to contain assumptions.
-
-Clearly mark uncertain assumptions.
-
-## Architecture / Data Flow
-
-Describe the relevant components.
-
-Use Mermaid diagrams whenever useful.
-
-Example:
-
-API
-↓
-OrderService
-↓
-MatchingEngine
-↓
-OrderBook
-↓
-Trade Events
-
-## Code Path
-
-List the most important classes, functions, or modules.
-
-Example:
-
-POST /orders
-
-OrderController
-→ OrderService
-→ MatchingEngine
-→ OrderBook
-
-Avoid listing every file.
-
-Focus on the critical execution path.
-
-## Key Code
-
-Include only small, relevant code slices.
-
-Each code slice must explain a concept.
-
-Do not include code merely for completeness.
-
-For each snippet, answer:
-
-- What does this code do?
-- Why is it important?
-- What system concept does it implement?
-
-## Design Choice
-
-Explain the current design.
-
-Example:
-
-Option A: database-driven matching
-
-Option B: in-memory matching
-
-Current project chooses Option B.
-
-## Trade-offs
-
-Discuss both benefits and costs.
-
-Possible dimensions:
-
-- latency
-- throughput
-- complexity
-- durability
-- consistency
-- scalability
-- maintainability
-- observability
-- recovery
-
-## Experiment / Verification Plan
-
-If applicable, describe how the understanding will be verified.
-
-Examples:
-
-- write a unit test
-- add tracing
-- run benchmark
-- simulate crash
-- inspect runtime state
-- create small prototype
-
-Link the corresponding PR when available.
-
-## Findings
-
-Update this section after investigation.
-
-Summarize the actual conclusion.
-
-Separate facts from interpretation.
-
-## What I Learned
-
-Write 3–5 concise reusable lessons.
-
-These should remain useful even if the specific source code later changes.
-
-## Open Questions
-
-List unresolved questions.
-
-These can become future Issues.
-
-## Related
-
-- Related Issue:
-- Related PR:
-- Related notes:
+## 关联
+父 Issue（如有）：
+前置任务（如有）：
+PR / 笔记（产生后补充）：
 ```
+
+架构图、关键代码、设计取舍、实验细节按需要添加，不要求填满所有栏目。开发任务可以省略“当前理解”；纯阅读任务也不必虚构代码改动。GitHub 对应模板在 `.github/ISSUE_TEMPLATE/`。
+
+## 主 Issue、子 Issue 和 PR 各写什么
+
+| 位置 | 主要内容 |
+| --- | --- |
+| 主 Issue | 本轮范围、子任务顺序、总体验收；链接到各子任务，不复制它们的详细结论 |
+| 子 Issue | 一个具体问题或一块工作、完成条件、简短结果和证据链接 |
+| PR | 实际改动、验证证据和相关 Issue |
+| 学习笔记 | 整理后的长期解释；Issue 和 PR 用链接引用 |
+
+- 能在一个小任务里讲清的问题，不强行拆成阅读、实现、实验三个 Issue。
+- 一个子 Issue 可以对应多个 PR，一个 PR 也可以完成紧密相关的多个子 Issue；PR 仍应有一个清楚的主要目的。
+- 前置任务只写必要依赖。完成子任务后更新父任务进度，不自动认定父任务完成。
+- 纯阅读任务有明确结论和源码依据即可关闭，无需为了流程创建 PR。
+- 子任务完成自己的验收后关闭；父任务在本轮必需子任务及总体验收全部完成后关闭。延期或取消的范围必须在父任务明确说明，不能只看关闭数量。
+- 本轮之外的问题记为后续任务，不让当前 Issue 无限扩大。
 
 ---
 
@@ -334,80 +155,36 @@ The title should communicate the exact learning target.
 
 # 6. Pull Request Structure
 
-Each PR should normally reference one primary Issue.
-
-Use:
+默认使用简版模板，GitHub 对应文件为 `.github/pull_request_template.md`。
 
 ```markdown
-Closes #<issue-number>
+## 目的与关联
+这次解决什么问题？
+Related to #N
+
+## 改动
+具体改了什么？
+
+## 验证
+运行了什么命令或检查？结果怎样？未执行的验证写清原因。
+
+## 结论与后续
+本次确认了什么？还有哪些限制或后续任务？没有可省略。
 ```
 
-only when the Issue should truly be completed after merging.
+- 只有合并后确实满足某个 Issue 的全部验收，才把 `Related to #N` 改成 `Closes #N`。
+- 一个 PR 可以列出多个准确的关联；不要因为完成一个子任务就写 `Closes` 父 Issue。
+- 无法在合并前补齐 Issue 结论时，先用 `Related to`，补齐后再手动关闭。
+- 代码路径、截图、日志、设计取舍按需添加，不重复整份 Issue。
 
-Otherwise use:
+## 实现与测试一起交付
 
-```markdown
-Related to #<issue-number>
-```
+实现 PR 必须包含证明本次基本行为正确的测试，尤其是资产、订单和清算逻辑。不能把必要测试全部留给后续实验任务。纯文档和模板变更做对应文档检查，无需增加业务测试。
 
-Recommended PR template:
-
-```markdown
-## Purpose
-
-What question does this PR help answer?
-
-Related Issue: #XX
-
-## Changes
-
-Describe the concrete code changes.
-
-Examples:
-
-- added unit tests for partial fills
-- added benchmark script
-- added tracing around matching
-- refactored code to expose behavior more clearly
-
-## Code Path
-
-Main execution path investigated:
-
-A
-→ B
-→ C
-
-## Evidence
-
-What behavior was observed?
-
-Include:
-
-- test results
-- benchmark results
-- logs
-- screenshots when genuinely useful
-- relevant code snippets
-
-## Findings
-
-What did this implementation or experiment prove?
-
-## Design Notes
-
-What trade-offs or architectural observations were discovered?
-
-## Limitations
-
-What does this PR NOT prove?
-
-What remains uncertain?
-
-## Follow-up
-
-Possible next Issues or PRs.
-```
+- 基本测试：正常路径、主要失败路径、核心不变量，与实现一起提交和验证。
+- 独立实验任务：更复杂的边界组合、故障模拟、并发研究或性能测试；依赖已经有基本验证的实现。
+- 需要拆成多个 PR 时，每个可合并的实现增量都要有对应基本测试；实验发现的问题在修复后重跑相关测试。
+- 例如 Step 2：#29 同时实现资产操作并测试三种转账、余额不足和基本守恒；#30 再研究连续小数操作、多用户多币种和边界组合。两个任务可以共享一个范围清楚的 PR，不要求一一对应。
 
 ---
 
@@ -756,12 +533,7 @@ If not, reduce or remove it.
 
 Start small.
 
-A first learning cycle can contain approximately:
-
-```text
-8 Issues
-6 PRs
-```
+下面仅是可选选题，不是数量要求，也不是每轮都要照搬的任务拆分。已有主任务和子任务时优先复用。
 
 Example:
 
@@ -839,7 +611,7 @@ Optional recovery experiment.
 
 ---
 
-## Issue 08 — improvement
+## Issue 08 — architecture + documentation
 
 Write a production architecture review.
 
@@ -851,25 +623,25 @@ No large implementation is required.
 
 # 18. Definition of Done
 
-An Issue is considered complete when:
+子 Issue 完成时：
 
-- the original question has a clear answer
-- the relevant code path has been identified
-- important design choices are explained
-- assumptions have been verified where practical
-- corresponding PRs are linked
-- remaining uncertainties are explicitly recorded
-- reusable lessons have been extracted
+- 本任务的问题有答案或工作达到验收要求。
+- 有适合该任务的证据：阅读任务给源码依据，实现任务给基本测试，实验任务给实际结果。
+- 写明简短结论、限制和后续问题；有 PR 就关联，没有代码或文档改动时不强求 PR。
+- 更新父任务进度（如有）。
 
-A PR is considered complete when:
+PR 可合并时：
 
-- it has one clear learning purpose
-- the change is reasonably small
-- evidence/results are recorded
-- it references the related Issue
-- conclusions are reflected back into the Issue
+- 改动目的清楚，包含必要的基本测试或与变更相符的检查，实际结果已记录。
+- 关联正确的 Issue，`Closes` 仅用于全部验收已满足的任务。
+- 关键结论回填 Issue 或链接到对应证据，不复制长篇说明。
+- 满足 AGENTS.md 中的构建和合并规则。
 
-A topic is fully complete when its useful conclusions have also been distilled into the permanent Markdown notes.
+主 Issue 完成时：
+
+- 本轮必需子任务完成，总体验收通过。
+- 推迟或取消的内容及原因已明确说明，后续安排可追踪。
+- 有价值的结论已按本轮需要整理到学习笔记并链接，不要求每个小 Issue 都单独写一篇笔记。
 
 ---
 
