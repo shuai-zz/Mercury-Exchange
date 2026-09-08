@@ -83,9 +83,9 @@ cd ../common && mvn install
 ### Issue 管理
 
 - 每个开发任务先建 Issue，描述目标、范围（checklist）和验收标准
-- 必须打 label：`enhancement`（新功能）/ `bug` / `docs` / `chore`
-- 必须挂 milestone：主线任务挂 `v1.0 交易所主线（MVP）`，增强功能挂 `v2 功能增强`
-- 任务完成即关闭（优先通过 PR 的 `Closes #N` 自动关闭）
+- 标签统一遵循 `docs/LEARNING_WORKFLOW.md` 第 3 节：开发任务选 `enhancement` / `bug` / `documentation` / `chore`；学习方向按需加 `architecture` / `code-reading` / `experiment`；层级用 `main-issue` / `sub-issue`，子任务必须建立真实父子关系。新任务不再使用 `improvement`，不创建 `docs` 标签。
+- 必须挂 milestone：主线任务挂 `v1.0 交易所主线（MVP）`，增强功能挂 `v2 功能增强`，永续合约挂 `v3.0 永续合约引擎`；子任务默认与父任务一致。
+- 主任务记录本轮范围、顺序和总体验收；子任务记录具体问题、结果和证据。各自满足验收才关闭，不能通过完成子任务提前关闭父任务；纯阅读任务不强制创建 PR。模板与关闭细则见学习 workflow 第 4、6、18 节。
 
 ### 分支管理
 
@@ -98,7 +98,7 @@ cd ../common && mvn install
 
 - Commit message 使用 Conventional Commits 格式：`feat:` / `fix:` / `docs:` / `chore:` / `refactor:` / `test:`
 - message 用英文，一句话说明"做了什么"，必要时正文说明"为什么"
-- PR 标题清晰，正文关联 Issue（`Closes #N`），说明变更内容和自测情况
+- PR 标题清晰，使用 `.github/pull_request_template.md`；默认 `Related to #N`，只有全部验收满足才用 `Closes #N`。实现 PR 必须包含基本行为测试，独立实验任务用于进一步验证，不能用来推迟必要测试。
 - 合并前自查：相关模块 `mvn install` 通过；不提交运行时产物（`target/`、`build/docker/` 数据目录等）
 - 使用 merge commit 合并
 
