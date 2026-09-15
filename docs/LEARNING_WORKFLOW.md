@@ -507,6 +507,8 @@ When helping with an Issue, the Agent should:
 11. Identify meaningful follow-up questions.
 12. Help distill finished Issues into permanent notes.
 
+Issue 正文默认由 Agent 起草和维护（目标、范围、结果回填），人负责确认结论和关闭决策。code-reading 类 Issue 必须按第 8 节包含关键代码片段和 code → concept 解释，不允许只有文字结论没有代码证据。
+
 ---
 
 # 16. What the Agent Should Avoid
