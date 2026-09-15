@@ -62,7 +62,7 @@ Then start the services in order: `config` → `trading-api` / `trading-sequence
 ## Roadmap
 
 - [x] **v0.1** — Project skeleton, infrastructure and database schema
-- [ ] **v0.2** — Common module & asset service
+- [x] **v0.2** — Common module & asset service
 - [ ] **v0.3** — Trading API
 - [ ] **v0.4** — Event sequencing & event sourcing
 - [ ] **v0.5** — Matching engine

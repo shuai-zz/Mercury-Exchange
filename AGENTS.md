@@ -36,7 +36,9 @@
 ├── trading-engine/     撮合引擎（核心）
 ├── quotation/          行情服务
 ├── push/               WebSocket 推送
-└── ui/                 Web 界面
+├── ui/                 Web 界面
+├── docs/               学习 workflow、follow-up 文档
+└── notes/              学习笔记（长期知识库，约定见 notes/README.md）
 ```
 
 注意：无根聚合 POM，需按依赖顺序逐个 `mvn install`（`parent` → `common` → 其余模块）。
@@ -63,7 +65,7 @@ cd ../common && mvn install
 | 里程碑 | 内容 | 对应版本标签 |
 | ------ | ---- | ------------ |
 | v0.1   | 项目骨架、基础设施、数据库表结构 | `v0.1.0` ✅ |
-| v0.2   | common 模块 + 资产系统（Issue #4） | `v0.2.0` |
+| v0.2   | common 模块 + 资产系统（Issue #4） | `v0.2.0` ✅ |
 | v0.3   | trading-api 用户接口 | `v0.3.0` |
 | v0.4   | 定序器 + 事件溯源机制 | `v0.4.0` |
 | v0.5   | 撮合引擎（核心，重点投入） | `v0.5.0` |
