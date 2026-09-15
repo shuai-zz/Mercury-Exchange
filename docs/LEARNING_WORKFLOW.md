@@ -411,6 +411,8 @@ notes/
 
 Issue and PR content should eventually be distilled into these notes.
 
+内容来源约定（自 Step 3 起）：笔记以教程正文与相关评论区为主要来源，结合本仓库代码实测验证；阅读代码时值得记录的内容在代码中用 `NOTE:` 注释标记，整理笔记时汇总。详见 `notes/README.md`。
+
 ---
 
 # 13. Issue vs Final Notes
