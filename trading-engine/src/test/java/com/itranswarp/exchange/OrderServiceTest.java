@@ -220,8 +220,10 @@ public class OrderServiceTest{
         });
         // NOTE: removeOrder removes from activeOrders BEFORE touching userOrders, so this
         // pathological half-removed state leaks: the order is gone from activeOrders even
-        // though the call threw. Fine in practice (the inconsistency cannot occur through
-        // the public API), but worth pinning down so a future refactor notices the change:
+        // though the call threw. The public writable-map getter used above CAN create this
+        // inconsistency; caller discipline is currently required. API boundaries and mixed
+        // operation checks are deferred to Issue #44. This deliberately violates that contract;
+        // a future read-only getter would require adapting this corruption scenario:
         assertNull(orderService.getOrder(9010L));
     }
 

@@ -59,14 +59,16 @@ public class OrderEntity implements EntitySupport, Comparable<OrderEntity> {
     public OrderStatus status;
 
     /**
-     * The ONLY entry point for mutating an order after insert.
+     * Intended mutation entry point after insert; public fields rely on caller discipline.
      * NOTE: seqlock write side. The first version++ makes the version ODD (write in progress),
      * the second makes it EVEN (write complete); readers reject odd snapshots in copy().
-     * volatile ordering guarantees a reader who sees the final even version also sees the
-     * three fields fully updated. Single writer, so plain ++ is safe.
+     * The volatile counter alone is not a proof of consistent cross-thread snapshots.
+     * Memory-ordering constraints and snapshot validation are deferred to Issue #44.
+     * Assumes one writer per order (caller contract, not enforced by the type system);
+     * plain ++ has no competing-writer race only under that contract.
      */
-    // the non-atomic ++ on a volatile field is safe here: the matching-engine thread is the
-    // ONLY writer (seqlock single-writer invariant), so there is no read-modify-write race.
+    // Assumes the matching-engine thread is the only writer. This is caller discipline,
+    // not an API-enforced invariant; competing writers would race on the non-atomic ++.
     @SuppressWarnings("NonAtomicOperationOnVolatileField")
     public void updateOrder(BigDecimal unfilledQuantity, OrderStatus status, long updatedAt) {
         this.version++;
@@ -96,8 +98,9 @@ public class OrderEntity implements EntitySupport, Comparable<OrderEntity> {
 
     /**
      * NOTE: seqlock version counter (see Issue #42). Odd = write in progress, even = stable.
-     * volatile guarantees cross-thread visibility and ordering for the optimistic checks in
-     * copy(); a plain int might be cached per-thread and the checks could miss updates.
+     * volatile gives the counter visibility semantics; the complete snapshot protocol still
+     * needs memory-ordering review and validation (Issue #44). Do not infer snapshot safety
+     * from counter visibility alone.
      * Incremented twice per updateOrder() (bracketing the field writes); single-writer, so
      * no atomicity needed.
      */
@@ -123,8 +126,8 @@ public class OrderEntity implements EntitySupport, Comparable<OrderEntity> {
 
     /**
      * Create a snapshot copy of this order.
-     * Returns null if the order is being updated or a concurrent modification is detected;
-     * caller should retry.
+     * Returns null for an odd starting version or a detected version change; caller should
+     * retry. Cross-thread consistency is not yet validated; see Issue #44 before concurrent use.
      */
     @Nullable
     public OrderEntity copy() {
