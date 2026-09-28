@@ -222,7 +222,8 @@ public class OrderServiceTest{
         // pathological half-removed state leaks: the order is gone from activeOrders even
         // though the call threw. The public writable-map getter used above CAN create this
         // inconsistency; caller discipline is currently required. API boundaries and mixed
-        // operation checks are deferred to Issue #44:
+        // operation checks are deferred to Issue #44. This deliberately violates that contract;
+        // a future read-only getter would require adapting this corruption scenario:
         assertNull(orderService.getOrder(9010L));
     }
 

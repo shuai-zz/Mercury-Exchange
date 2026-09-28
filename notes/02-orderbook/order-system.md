@@ -59,7 +59,7 @@ removeOrder 先从 activeOrders 删除，再从订单上的 userId 找到用户�
 
 ## 5. 存储精度与输入契约
 
-EntitySupport 定义 PRECISION=36、SCALE=18，OrderEntity 的 decimal 映射使用它们。AssetEnum.SCALE=2 则是拟用于 API 输入的精度契约。
+截至本轮实现提交 4bb7327，EntitySupport 定义 PRECISION=36、SCALE=18，OrderEntity 的 decimal 映射使用它们。AssetEnum.SCALE=2 则是拟用于 API 输入的精度契约，后续调整须由 #45 明确并同步此处。
 
 数据库列可以存多少小数，与客户端可以提交多少小数，是两个不同问题。当前没有入口统一落实 SCALE=2；不得从常量存在推断输入已被校验。价格、数量与精度的校验方式由 #45 落地。
 
@@ -82,7 +82,7 @@ if (ver != this.version) {
 
 **当前不能承诺跨线程一致快照。** PR #43 审查把 Java 内存排序问题移交 #42：源代码的语句顺序、volatile 可见性和整个乐观读协议的正确性需要分别判断。版本相等不能单独充当完整证明。
 
-JDK 的 [VarHandle 屏障规范](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/VarHandle.html)分别约束读/写之间的重排序；[StampedLock](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/StampedLock.html)也强调先保存候选读取，再完成乐观验证。它们是后续方案评估的依据，不能仅插入几个屏障名称就宣布本实现正确。
+JDK 的 [VarHandle 屏障规范](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/VarHandle.html)分别约束读/写之间的重排序；[StampedLock](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/StampedLock.html)也强调先保存候选读取，再完成乐观验证。后续需分别论证写侧开始标记与字段写入、读侧字段读取与最终版本复检之间的排序；前者研究 StoreStore 约束，后者研究 acquire/LoadLoad 约束。它们是后续方案评估的依据，不能仅插入几个屏障名称就宣布本实现正确。
 
 本轮决策：保留现有教学实现，记录尚未完成的保证，不新增快照测试或并发改造。#44 承接基本测试、排序约束和方案比较，在真实订单查询与撮合写线程并发接入之前完成。候选方案包括显式屏障、StampedLock、不可变状态加 volatile 引用；当前不预选未经验证的修复。
 

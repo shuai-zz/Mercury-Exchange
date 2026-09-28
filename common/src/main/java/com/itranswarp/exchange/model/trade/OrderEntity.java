@@ -64,10 +64,11 @@ public class OrderEntity implements EntitySupport, Comparable<OrderEntity> {
      * the second makes it EVEN (write complete); readers reject odd snapshots in copy().
      * The volatile counter alone is not a proof of consistent cross-thread snapshots.
      * Memory-ordering constraints and snapshot validation are deferred to Issue #44.
-     * Single writer, so plain ++ has no competing-writer race.
+     * Assumes one writer per order (caller contract, not enforced by the type system);
+     * plain ++ has no competing-writer race only under that contract.
      */
-    // the non-atomic ++ on a volatile field is safe here: the matching-engine thread is the
-    // ONLY writer (seqlock single-writer invariant), so there is no read-modify-write race.
+    // Assumes the matching-engine thread is the only writer. This is caller discipline,
+    // not an API-enforced invariant; competing writers would race on the non-atomic ++.
     @SuppressWarnings("NonAtomicOperationOnVolatileField")
     public void updateOrder(BigDecimal unfilledQuantity, OrderStatus status, long updatedAt) {
         this.version++;
