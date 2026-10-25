@@ -147,6 +147,17 @@ class MatchEngineTest {
         assertFalse(this.engine.buyBook.exist(order));
     }
 
+    @Test
+    void cancelUnfilledSellOrder() {
+        OrderEntity order = createAndProcess(Direction.SELL, "100", "2");
+
+        this.engine.cancel(2000L, order);
+
+        assertEquals(OrderStatus.FULLY_CANCELED, order.status);
+        assertBDEquals("2", order.unfilledQuantity);
+        assertFalse(this.engine.sellBook.exist(order));
+    }
+
     private OrderEntity createAndProcess(Direction direction, String price, String quantity) {
         OrderEntity order = createOrder(direction, price, quantity);
         this.engine.processOrder(order.sequenceId, order);
