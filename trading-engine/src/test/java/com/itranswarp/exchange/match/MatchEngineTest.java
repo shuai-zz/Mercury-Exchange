@@ -66,7 +66,7 @@ class MatchEngineTest {
                 .map(order -> order.unfilledQuantity)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         // Each execution consumes the same quantity from one buy and one sell order.
-        assertEquals(0, inputQuantity.compareTo(matchedQuantity.multiply(BigDecimal.TWO).add(restingQuantity)));
+        assertEquals(0, inputQuantity.compareTo(matchedQuantity.multiply(BigDecimal.valueOf(2)).add(restingQuantity)));
         for (OrderEntity order : orders) {
             BigDecimal filled = matches.stream()
                     .filter(match -> match.takerOrder() == order || match.makerOrder() == order)
